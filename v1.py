@@ -499,7 +499,7 @@ with st.sidebar:
 
     interval = st.selectbox(
         "時間週期",
-        options=["1m","5m","15m","30m","1h","4h","1d,"1w","1mo"],
+        options=["1m","5m","15m","30m","1h","4h","1d","1w","1mo"],
         index=4,
         format_func=lambda x: {
             "1m":"1分鐘","5m":"5分鐘","15m":"15分鐘","30m":"30分鐘",
