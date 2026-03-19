@@ -1,7 +1,7 @@
 import streamlit as st
 import yfinance as yf
 import pandas as pd
-import pandas_ta as ta
+import ta
 import requests
 import time
 import threading
@@ -274,7 +274,7 @@ def detect_signals(ticker: str, interval: str, pro_filter: bool, pro_rsi: bool, 
     volume = df["Volume"]
 
     # ── Indicators ──────────────────────────────────────────────────────────────
-    rsi_series = ta.rsi(close, length=14)
+    rsi_series = ta.momentum.RSIIndicator(close=close, window=14).rsi()
     rsi_val    = float(rsi_series.iloc[-1]) if rsi_series is not None else 50.0
 
     body      = close - open_
