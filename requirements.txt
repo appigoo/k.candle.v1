@@ -1,6 +1,6 @@
 streamlit>=1.32.0
 yfinance>=0.2.38
 pandas>=2.0.0
-pandas-ta-classic>=0.4.0   # or just pandas-ta if you prefer the original
+pandas-ta-classic
 requests>=2.31.0
 pytz>=2024.1
