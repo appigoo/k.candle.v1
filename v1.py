@@ -23,16 +23,16 @@ st.markdown("""
 @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap');
 
 :root {
-    --bg: #0a0e1a;
-    --surface: #0f1629;
-    --card: #131c35;
-    --border: #1e2d54;
+    --bg: #111827;
+    --surface: #1a2235;
+    --card: #1e2d45;
+    --border: #2e4270;
     --accent-green: #00ff88;
-    --accent-red: #ff3b5c;
-    --accent-blue: #4d9fff;
-    --accent-yellow: #ffd94d;
-    --text: #c8d8f0;
-    --text-dim: #5a7aaa;
+    --accent-red: #ff4d6a;
+    --accent-blue: #60aeff;
+    --accent-yellow: #ffe066;
+    --text: #eaf2ff;
+    --text-dim: #9ab8d8;
     --glow-green: 0 0 12px rgba(0,255,136,0.4);
     --glow-red: 0 0 12px rgba(255,59,92,0.4);
     --glow-blue: 0 0 12px rgba(77,159,255,0.4);
@@ -41,6 +41,11 @@ st.markdown("""
 html, body, [class*="css"] {
     font-family: 'Rajdhani', sans-serif;
     background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+
+/* Force all text elements bright */
+p, span, label, div, li, a {
     color: var(--text);
 }
 
@@ -50,6 +55,9 @@ html, body, [class*="css"] {
 section[data-testid="stSidebar"] {
     background: var(--surface) !important;
     border-right: 1px solid var(--border);
+}
+section[data-testid="stSidebar"] * {
+    color: var(--text) !important;
 }
 
 /* Header */
@@ -114,8 +122,8 @@ section[data-testid="stSidebar"] {
     font-family: 'Share Tech Mono', monospace;
 }
 .signal-card .meta {
-    color: var(--text-dim);
-    font-size: 0.82rem;
+    color: #b8d0ec;
+    font-size: 0.85rem;
     margin-top: 0.4rem;
 }
 .signal-card .price {
@@ -206,7 +214,7 @@ div[data-testid="stMetric"] {
 .section-title {
     font-family: 'Share Tech Mono', monospace;
     font-size: 0.78rem;
-    color: var(--text-dim);
+    color: #9ab8d8;
     letter-spacing: 0.15em;
     text-transform: uppercase;
     border-bottom: 1px solid var(--border);
@@ -248,8 +256,8 @@ def stars(n):
     return "★" * n + "☆" * (5 - n)
 
 def detect_signals(ticker: str, interval: str, pro_filter: bool, pro_rsi: bool, pro_cooldown: bool):
-    interval_map = {"1m":"1m","5m":"5m","15m":"15m","30m":"30m","1h":"60m","4h":"1h","1w":"1wk","1mo":"1mo"}
-    period_map   = {"1m":"1d","5m":"5d","15m":"5d","30m":"5d","1h":"30d","4h":"60d","1w":"1y","1mo":"5y"}
+    interval_map = {"1m":"1m","5m":"5m","15m":"15m","30m":"30m","1h":"60m","4h":"1h","1d":"1d","1w":"1wk","1mo":"1mo"}
+    period_map   = {"1m":"1d","5m":"5d","15m":"5d","30m":"5d","1h":"30d","4h":"60d","1d":"6mo","1w":"1y","1mo":"5y"}
     yf_interval  = interval_map.get(interval, "60m")
     yf_period    = period_map.get(interval, "30d")
 
@@ -310,7 +318,7 @@ def detect_signals(ticker: str, interval: str, pro_filter: bool, pro_rsi: bool, 
         key = f"{ticker}_{direction}"
         if pro_cooldown and st.session_state.last_signal_time[key] is not None:
             elapsed_bars = 3  # conceptual; use time-based approximation
-            mins_per_bar = {"1m":1,"5m":5,"15m":15,"30m":30,"1h":60,"4h":240,"1w":10080,"1mo":43200}
+            mins_per_bar = {"1m":1,"5m":5,"15m":15,"30m":30,"1h":60,"4h":240,"1d":1440,"1w":10080,"1mo":43200}
             mpb = mins_per_bar.get(interval, 60)
             cooldown_mins = mpb * 3
             since_last = (datetime.now() - st.session_state.last_signal_time[key]).total_seconds() / 60
@@ -433,7 +441,7 @@ def format_message(sig, pro_rsi, pro_cooldown):
     icon = "🟢" if sig["direction"] == "BUY" else "🔴"
     interval_zh = {
         "1m":"1分鐘","5m":"5分鐘","15m":"15分鐘","30m":"30分鐘",
-        "1h":"1小時","4h":"4小時","1d":"1day","1w":"1週","1mo":"1個月"
+        "1h":"1小時","4h":"4小時","1d":"1天","1w":"1週","1mo":"1個月"
     }.get(sig["interval"], sig["interval"])
 
     lines = [
@@ -503,7 +511,7 @@ with st.sidebar:
         index=4,
         format_func=lambda x: {
             "1m":"1分鐘","5m":"5分鐘","15m":"15分鐘","30m":"30分鐘",
-            "1h":"1小時","4h":"4小時","1d":"1day","1w":"1週","1mo":"1個月"
+            "1h":"1小時","4h":"4小時","1d":"1天","1w":"1週","1mo":"1個月"
         }[x]
     )
 
@@ -606,8 +614,8 @@ status_dot = "🟢" if st.session_state.monitoring else "⚫"
 status_txt = "監控中" if st.session_state.monitoring else "已停止"
 st.markdown(f"""
 <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;
-     background:#0f1629;border:1px solid #1e2d54;border-radius:6px;padding:0.5rem 1rem;
-     font-family:'Share Tech Mono',monospace;font-size:0.82rem;color:#5a7aaa;">
+     background:#1a2235;border:1px solid #2e4270;border-radius:6px;padding:0.5rem 1rem;
+     font-family:'Share Tech Mono',monospace;font-size:0.82rem;color:#b8d0ec;">
     {status_dot} 狀態：{status_txt} &nbsp;|&nbsp;
     監控股票：{', '.join(tickers)} &nbsp;|&nbsp;
     週期：{interval} &nbsp;|&nbsp;
@@ -620,10 +628,10 @@ st.markdown('<div class="section-title">📋 信號記錄</div>', unsafe_allow_h
 
 if not st.session_state.signals_log:
     st.markdown("""
-    <div style="text-align:center;padding:3rem;color:#5a7aaa;
-         background:#0f1629;border:1px dashed #1e2d54;border-radius:8px;">
+    <div style="text-align:center;padding:3rem;color:#9ab8d8;
+         background:#1a2235;border:1px dashed #2e4270;border-radius:8px;">
         <div style="font-size:2rem;margin-bottom:0.5rem;">📭</div>
-        <div style="font-family:'Share Tech Mono',monospace;font-size:0.85rem;">
+        <div style="font-family:'Share Tech Mono',monospace;font-size:0.85rem;color:#b8d0ec;">
             尚無信號記錄<br>點擊「立即掃描一次」或開始監控
         </div>
     </div>
@@ -655,7 +663,7 @@ else:
                     ⏱ {sig['interval']} &nbsp;|&nbsp;
                     📊 均量 {sig['vol_pct']}
                     {rsi_html}
-                    <span style="float:right;color:#2a4070;">{time_str}</span>
+                    <span style="float:right;color:#7090b0;">{time_str}</span>
                 </div>
             </div>
             """, unsafe_allow_html=True)
