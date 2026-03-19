@@ -31,7 +31,7 @@ st.markdown("""
     --accent-red: #ff4d6a;
     --accent-blue: #60aeff;
     --accent-yellow: #ffe066;
-    --text: #eaf2ff;
+    --text: #ffbf00;
     --text-dim: #9ab8d8;
     --glow-green: 0 0 12px rgba(0,255,136,0.4);
     --glow-red: 0 0 12px rgba(255,59,92,0.4);
