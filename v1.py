@@ -433,7 +433,7 @@ def format_message(sig, pro_rsi, pro_cooldown):
     icon = "🟢" if sig["direction"] == "BUY" else "🔴"
     interval_zh = {
         "1m":"1分鐘","5m":"5分鐘","15m":"15分鐘","30m":"30分鐘",
-        "1h":"1小時","4h":"4小時","1w":"1週","1mo":"1個月"
+        "1h":"1小時","4h":"4小時","1d":"1day","1w":"1週","1mo":"1個月"
     }.get(sig["interval"], sig["interval"])
 
     lines = [
