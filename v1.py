@@ -31,7 +31,7 @@ st.markdown("""
     --accent-red: #ff4d6a;
     --accent-blue: #60aeff;
     --accent-yellow: #ffe066;
-    --text: #ffbf00;
+    --text: #eaf2ff;
     --text-dim: #9ab8d8;
     --glow-green: 0 0 12px rgba(0,255,136,0.4);
     --glow-red: 0 0 12px rgba(255,59,92,0.4);
@@ -639,34 +639,40 @@ if not st.session_state.signals_log:
 else:
     for sig in st.session_state.signals_log:
         if isinstance(sig, dict) and "direction" in sig:
-            css_class = "buy" if sig["direction"] == "BUY" else "sell"
+            css_class   = "buy" if sig["direction"] == "BUY" else "sell"
             badge_class = "badge-buy" if sig["direction"] == "BUY" else "badge-sell"
             direction_zh = "買入" if sig["direction"] == "BUY" else "賣出"
-            time_str = sig["time"].strftime("%H:%M:%S") if "time" in sig else ""
+            time_str    = sig["time"].strftime("%H:%M:%S") if "time" in sig else ""
+            star_str    = "★" * sig["rating"] + "☆" * (5 - sig["rating"])
 
             rsi_html = ""
             if st.session_state.pro_rsi:
-                rsi_html = f'<span style="color:#4d9fff;margin-left:1rem;">RSI: {sig["rsi"]:.1f}</span>'
+                rsi_html = f'<span style="color:#60aeff;margin-left:1rem;">RSI: {sig["rsi"]:.1f}</span>'
 
-            st.markdown(f"""
-            <div class="signal-card {css_class}">
-                <div style="display:flex;justify-content:space-between;align-items:center;">
-                    <div>
-                        <span class="ticker">{sig['ticker']}</span>
-                        <span class="{badge_class}" style="margin-left:0.6rem;">{direction_zh}</span>
-                        <span style="margin-left:0.5rem;font-size:0.9rem;">{"★"*sig['rating']}{"☆"*(5-sig['rating'])}</span>
-                    </div>
-                    <span class="price">${sig['price']:.2f}</span>
-                </div>
-                <div class="meta" style="margin-top:0.35rem;">
-                    🎯 {sig['name']} &nbsp;|&nbsp;
-                    ⏱ {sig['interval']} &nbsp;|&nbsp;
-                    📊 均量 {sig['vol_pct']}
-                    {rsi_html}
-                    <span style="float:right;color:#7090b0;">{time_str}</span>
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
+            price_str   = f'${sig["price"]:.2f}'
+            ticker      = sig["ticker"]
+            name        = sig["name"]
+            interval_lbl = sig["interval"]
+            vol_pct     = sig["vol_pct"]
+
+            card_html = (
+                f'<div class="signal-card {css_class}">'
+                f'<div style="display:flex;justify-content:space-between;align-items:center;">'
+                f'<div>'
+                f'<span class="ticker">{ticker}</span>'
+                f'<span class="{badge_class}" style="margin-left:0.6rem;">{direction_zh}</span>'
+                f'<span style="margin-left:0.5rem;font-size:1rem;">{star_str}</span>'
+                f'</div>'
+                f'<span class="price">{price_str}</span>'
+                f'</div>'
+                f'<div class="meta" style="margin-top:0.35rem;">'
+                f'🎯 {name} &nbsp;|&nbsp; ⏱ {interval_lbl} &nbsp;|&nbsp; 📊 均量 {vol_pct}'
+                f'{rsi_html}'
+                f'<span style="float:right;color:#7090b0;">{time_str}</span>'
+                f'</div>'
+                f'</div>'
+            )
+            st.markdown(card_html, unsafe_allow_html=True)
 
 # ─── Auto Refresh Loop ─────────────────────────────────────────────────────────
 if st.session_state.monitoring:
