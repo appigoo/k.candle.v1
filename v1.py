@@ -500,7 +500,7 @@ with st.sidebar:
 
     tickers_input = st.text_input(
         "股票代碼（逗號分隔）",
-        value="TSLA,AAPL,NVDA,MSFT,AMZN",
+        value="TSLA, UVXY, UVIX, NIO, TSLL, XPEV, GLD, META, GOOGL, AAPL, NVDA, AMZN, TSM, MSFT",
         help="例：TSLA,AAPL,NVDA"
     )
     tickers = [t.strip().upper() for t in tickers_input.split(",") if t.strip()]
